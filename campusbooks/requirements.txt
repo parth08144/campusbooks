@@ -1,5 +1,6 @@
 pymongo>=4.7
 dnspython>=2.6
+certifi
 python-dotenv>=1.0
 Faker>=24.0
 tabulate>=0.9

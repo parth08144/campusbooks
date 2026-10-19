@@ -12,6 +12,7 @@ never touch the source code (important for Git repositories).
 """
 
 import os
+import certifi
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
@@ -48,7 +49,7 @@ def get_db():
         # … do work …
         client.close()
     """
-    client = MongoClient(MONGO_URI)
+    client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
     db     = client[DB_NAME]
     return client, db
 
