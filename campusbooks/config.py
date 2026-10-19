@@ -19,10 +19,21 @@ from dotenv import load_dotenv
 # override=False means real env vars win over .env (good for CI/CD pipelines).
 load_dotenv(override=False)
 
-# Pull values with sensible defaults so the project works out-of-the-box
-# with a local MongoDB instance even without a .env file.
-MONGO_URI: str = os.getenv("MONGO_URI", "mongodb://localhost:27017")
-DB_NAME: str   = os.getenv("DB_NAME",   "campusbooks")
+# WHY: Streamlit Cloud stores secrets in st.secrets (TOML format), not in
+# OS environment variables. We try st.secrets first (cloud), then fall back
+# to os.environ / .env (local development).
+def _get_secret(key: str, default: str = "") -> str:
+    """Read from Streamlit secrets first, then OS env, then default."""
+    try:
+        import streamlit as st
+        if key in st.secrets:
+            return st.secrets[key]
+    except Exception:
+        pass
+    return os.getenv(key, default)
+
+MONGO_URI: str = _get_secret("MONGO_URI", "mongodb://localhost:27017")
+DB_NAME: str   = _get_secret("DB_NAME",   "campusbooks")
 
 
 def get_db():
