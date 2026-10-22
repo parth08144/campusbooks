@@ -675,7 +675,7 @@ elif page == PAGES[4]:
     </div>
     """, unsafe_allow_html=True)
 
-    listings = services.get_available_listings(db, limit=60)
+    listings = services.get_available_listings(db, limit=200)
     students = services.get_all_students(db)
 
     if not listings:

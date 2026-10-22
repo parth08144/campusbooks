@@ -304,12 +304,12 @@ def insert_student(db, data: dict) -> ObjectId:
 # Buy a book (atomic reservation + transaction creation)
 # ─────────────────────────────────────────────────────────────────────────────
 
-def get_available_listings(db, limit: int = 50) -> list[dict]:
-    """Return available listings for the Buy page dropdown."""
+def get_available_listings(db, limit: int = 200) -> list[dict]:
+    """Return available listings for the Buy page dropdown (newest first)."""
     return list(db["listings"].find(
         {"status": "available"},
         {"_id": 1, "title": 1, "price": 1, "courseCode": 1, "condition": 1, "sellerId": 1},
-    ).sort("price", 1).limit(limit))
+    ).sort("postedAt", -1).limit(limit))
 
 
 def atomic_reserve_and_buy(
